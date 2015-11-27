@@ -55,7 +55,8 @@ struct node* deque(struct node** current,int trigger, int widgets){
 			
 			if((*current)->back == NULL){
 				cout << "Not enough widgets cancel order" << endl;
-				return (*current)->back;
+				(*current)->widgets = 0;
+				return *current;
 			}
 
 			*current = (*current)->back;
