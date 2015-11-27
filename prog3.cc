@@ -41,13 +41,27 @@ int length(struct node* current){
 
 }
 
-struct node* deque(struct node** current,int trigger, int widgets){
+struct node* deque(struct node** current,int trigger, int widgets,double promo){
 	int totalPrice;
-	if((*current)->widgets == 0){
-		*current = (*current)->back;
-	}	
-		while(widgets > (*current)->widgets){	
-			totalPrice = (*current)->widgets * (*current)->price * 1.3;
+	if(trigger > 0){
+		 int promo  = (((*current)->widgets * (*current)->price * promo) / 100);	
+		} else {
+			promo = 1;
+		
+		}	
+
+if((*current)->widgets == 0){
+	*current = (*current)->back;
+}	
+	while(widgets > (*current)->widgets){	
+	
+		if(trigger > 0){
+                promo = (((*current)->widgets * (*current)->price * promo) / 100);
+        		} else {
+                		promo = 1;
+        		}
+
+			totalPrice = ((*current)->widgets * (*current)->price * 1.3) - promo;
 
 			cout << (*current)->widgets << " sold at $" << (*current)->price << " per widget Sales: $" << totalPrice << endl; 
 
@@ -60,14 +74,13 @@ struct node* deque(struct node** current,int trigger, int widgets){
 			}
 
 			*current = (*current)->back;
-			
+			trigger--;			
 		}
 	
 		(*current)->widgets = (*current)->widgets - widgets;
-		cout << widgets << " at $" << (*current)->price << " each Sales $" << (*current)->price * widgets * 1.3 << endl;
-	
-	return *current;
-	
+		cout << widgets << " at $" << (*current)->price << " each Sales $" << ((*current)->price * widgets * 1.3) - promo << endl;
+		trigger--;	
+		return *current;
 }
 
 int main() {
@@ -77,10 +90,12 @@ int main() {
 	struct node *head = buildList();
 	struct node *current = head;	
 	char n;
+	int i;
 	input >> n;
 	int trigger = 0;
 	int widgets;
 	double price;
+	int promo;
 	while(!input.fail()) {
 		if(n == 'r'){
 			input >> widgets;
@@ -91,14 +106,16 @@ int main() {
 		}		
 		else if (n == 's'){
 			input >> widgets;
-			head = deque(&head,trigger,widgets);
+			head = deque(&head,trigger,widgets,promo);
 			if(trigger == 2 || trigger == 1){trigger--;}
 			
 		}
 		else if (n == 'p'){
-//cout << "There is a " << n << "%" << " discount on the next two items." << endl;
-			input >> n;
-//			trigger = 2;
+
+			input >> i;
+			promo = i;
+			trigger = 2;
+			cout << "There is a " << i << "%" << " discount on the next two items." << endl;
 		}
 		input >> n;
 	}
